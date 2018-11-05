@@ -12,7 +12,7 @@ object App {
     val config = new SparkConf().setAppName("tweeconomics").setMaster("local[*]")
     val sc = new SparkContext(config)
 
-    def main(args: Array[String]) {
+    def main(args: Array[String]) = {
         val streaming = new Streaming()
         streaming.setupAnalyzer()
         streaming.start()
