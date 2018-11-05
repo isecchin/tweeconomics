@@ -1,6 +1,6 @@
 name := "tweeconomics"
 version := "0.1.0"
-scalaVersion := "2.12.7"
+scalaVersion := "2.11.8"
 
 libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp"             % "3.7.0" artifacts (Artifact("stanford-corenlp", "models"), Artifact("stanford-corenlp"))
 
