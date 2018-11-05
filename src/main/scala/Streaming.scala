@@ -12,7 +12,7 @@ class Streaming {
     val ssc = new StreamingContext(App.sc, Seconds(1))
     val stream = TwitterUtils.createStream(ssc, None)
 
-    def setupAnalyzer() {
+    def setupAnalyzer() = {
         val tweets = stream.filter{status => status.getLang == "en"}.map{status =>
             status.getText
         }
@@ -24,7 +24,7 @@ class Streaming {
         }
     }
 
-    def start() {
+    def start() = {
         ssc.start()
         ssc.awaitTermination()
     }
