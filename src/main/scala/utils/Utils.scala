@@ -25,14 +25,14 @@ object Utils {
 
         val map = new HashMap[String, String] ++= pairs
         val configKeys = Seq("consumerKey", "consumerSecret", "accessToken", "accessTokenSecret")
-        println("\tConfiguring Twitter OAuth...")
+        Logger.info("Configuring Twitter OAuth...")
         configKeys.foreach(key => {
             if (!map.contains(key)) {
                 throw new Exception("Error setting OAuth authenticaion - value for " + key + " not found")
             }
             val fullKey = "twitter4j.oauth." + key
             System.setProperty(fullKey, map(key))
-            println("\t\tProperty " + fullKey + " set as " + map(key))
+            Logger.info("\tProperty " + fullKey + " set as " + map(key))
         })
     }
 }
