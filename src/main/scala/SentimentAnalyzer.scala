@@ -10,8 +10,8 @@ import edu.stanford.nlp.sentiment.SentimentCoreAnnotations
 
 import scala.collection.convert.wrapAll._
 
-object SentimentAnalyzer {
-
+object SentimentAnalyzer
+{
     val props = new Properties()
     props.setProperty("annotators", "tokenize, ssplit, parse, sentiment")
     val pipeline: StanfordCoreNLP = new StanfordCoreNLP(props)
@@ -32,7 +32,7 @@ object SentimentAnalyzer {
         val sentences = annotation.get(classOf[CoreAnnotations.SentencesAnnotation])
         sentences
             .map(sentence => (sentence, sentence.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])))
-            .map { case (sentence, tree) => (sentence.toString,Sentiment.toSentiment(RNNCoreAnnotations.getPredictedClass(tree))) }
+            .map{case (sentence, tree) => (sentence.toString, Sentiment.toSentiment(RNNCoreAnnotations.getPredictedClass(tree)))}
             .toList
     }
 }

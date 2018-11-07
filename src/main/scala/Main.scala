@@ -5,8 +5,8 @@ import org.apache.spark.streaming._
 import org.apache.spark.streaming.dstream._
 import org.apache.spark.streaming.twitter._
 
-object App {
-
+object App
+{
     Logger.setup()
 
     val config = new SparkConf().setAppName("tweeconomics").setMaster("local[*]")
@@ -14,6 +14,7 @@ object App {
 
     def main(args: Array[String]) = {
         val streaming = new Streaming()
+
         streaming.setupAnalyzer()
         streaming.start()
     }

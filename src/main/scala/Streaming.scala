@@ -7,6 +7,8 @@ import org.apache.spark.streaming.twitter._
 
 class Streaming {
 
+class Streaming
+{
     Utils.configureTwitterCredentials()
 
     val ssc = new StreamingContext(App.sc, Seconds(1))
