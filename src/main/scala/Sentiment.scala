@@ -1,7 +1,7 @@
 package tweeconomics
 
-object Sentiment extends Enumeration {
-
+object Sentiment extends Enumeration
+{
     type Sentiment = Value
     val POSITIVE, NEGATIVE, NEUTRAL = Value
 
