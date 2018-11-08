@@ -2,10 +2,19 @@ package tweeconomics
 
 import java.io.File
 
+import tweeconomics.Sentiment.Sentiment
 import scala.io.Source
+import org.apache.spark.sql.SparkSession
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.ArrayBuffer
+import java.time.format.DateTimeFormatter
 
-object Utils {
+object Utils
+{
+    val dictionaryFileName = "dictionary.json"
+    val spark = SparkSession.builder().getOrCreate()
+
+    val dateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss.SSS")
 
     /** Configures the OAuth Credentials for accessing Twitter */
     def configureTwitterCredentials() = {
@@ -34,5 +43,57 @@ object Utils {
             System.setProperty(fullKey, map(key))
             Logger.info("\tProperty " + fullKey + " set as " + map(key))
         })
+    }
+
+    def sentimentToString(sentiment: Sentiment): String = sentiment match {
+        case Sentiment.VERY_NEGATIVE => "VERY_NEGATIVE"
+        case Sentiment.NEGATIVE      => "NEGATIVE"
+        case Sentiment.NEUTRAL       => "NEUTRAL"
+        case Sentiment.POSITIVE      => "POSITIVE"
+        case Sentiment.VERY_POSITIVE => "VERY_POSITIVE"
+    }
+
+    def readJSON(filename: String) = {
+        spark.read.json(filename)
+    }
+
+    /**
+     * I know this is not ideal (we're using collect)
+     * but I could not find another way of doing the merge
+     * of the filters' array inside the JSON file yet
+     *
+     * @return Array of all filters
+     */
+    def getFilters() = {
+        val json = readJSON(dictionaryFileName)
+        val filtersArray = ArrayBuffer[String]()
+
+        json.collect().foreach(row => {
+            filtersArray += row.getAs[String]("filter")
+        })
+
+        filtersArray
+    }
+
+    /**
+     * I know this is not ideal (we're using collect)
+     * but I could not find another way of doing the merge
+     * of the filters' array inside the JSON file yet
+     *
+     * @return Array of all filters
+     */
+    def getFiltersMap() = {
+        val json = readJSON(dictionaryFileName)
+        val filtersArray = ArrayBuffer[Map[String, String]]()
+
+        json.collect().foreach(row => {
+            val company = row.getAs[String]("company")
+            val filter  = row.getAs[String]("filter")
+            val map = Map("company" -> company, "filter" -> filter)
+
+            filtersArray += map
+        })
+
+        filtersArray
     }
 }
