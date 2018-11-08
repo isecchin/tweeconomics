@@ -39,7 +39,7 @@ class Streaming
                     filters.foreach(filter => {
                         if (filter("filter").isSubstringOf(tweet)) {
                             val company = filter("company")
-                            val sentimentString = Utils.sentimentToString(sentiment._2)
+                            val sentimentString = sentiment._2
                             val tweetData = TweetData(company, dateString, sentimentString)
                             dataList += tweetData
                         }

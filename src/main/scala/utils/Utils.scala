@@ -2,7 +2,6 @@ package tweeconomics
 
 import java.io.File
 
-import tweeconomics.Sentiment.Sentiment
 import scala.io.Source
 import org.apache.spark.sql.SparkSession
 import scala.collection.mutable.HashMap
@@ -43,14 +42,6 @@ object Utils
             System.setProperty(fullKey, map(key))
             Logger.info("\tProperty " + fullKey + " set as " + map(key))
         })
-    }
-
-    def sentimentToString(sentiment: Sentiment): String = sentiment match {
-        case Sentiment.VERY_NEGATIVE => "VERY_NEGATIVE"
-        case Sentiment.NEGATIVE      => "NEGATIVE"
-        case Sentiment.NEUTRAL       => "NEUTRAL"
-        case Sentiment.POSITIVE      => "POSITIVE"
-        case Sentiment.VERY_POSITIVE => "VERY_POSITIVE"
     }
 
     def readJSON(filename: String) = {
