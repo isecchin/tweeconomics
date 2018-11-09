@@ -15,10 +15,9 @@ object Utils
 
     val dateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss.SSS")
 
-    /** Configures the OAuth Credentials for accessing Twitter */
-    def configureTwitterCredentials() = {
+    def setupCredentials() = {
         val file = new File("credentials.txt")
-        if (!file.exists) {
+        if (! file.exists) {
             throw new Exception("Could not find configuration file " + file)
         }
 
@@ -32,16 +31,9 @@ object Utils
         })
 
         val map = new HashMap[String, String] ++= pairs
-        val configKeys = Seq("consumerKey", "consumerSecret", "accessToken", "accessTokenSecret")
-        Logger.info("Configuring Twitter OAuth...")
-        configKeys.foreach(key => {
-            if (!map.contains(key)) {
-                throw new Exception("Error setting OAuth authenticaion - value for " + key + " not found")
-            }
-            val fullKey = "twitter4j.oauth." + key
-            System.setProperty(fullKey, map(key))
-            Logger.info("\tProperty " + fullKey + " set as " + map(key))
-        })
+
+        Twitter.configure(map)
+        DB.configure(map)
     }
 
     def readJSON(filename: String) = {

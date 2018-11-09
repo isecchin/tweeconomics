@@ -12,7 +12,7 @@ case class TweetData(company: String, date: String, sentiment: String)
 
 class Streaming
 {
-    Utils.configureTwitterCredentials()
+    Utils.setupCredentials()
 
     val ssc = new StreamingContext(App.sc, Seconds(60))
     val stream = TwitterUtils.createStream(ssc, None, Utils.getFilters())
