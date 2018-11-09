@@ -4,7 +4,7 @@ import scala.collection.mutable.HashMap
 
 object Twitter
 {
-    def configure(credentials: HashMap) = {
+    def configure(credentials: HashMap[String, String]) = {
         val configKeys = Seq("consumerKey", "consumerSecret", "accessToken", "accessTokenSecret")
         Logger.info("Configuring Twitter OAuth...")
 

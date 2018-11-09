@@ -8,7 +8,7 @@ import org.apache.spark.streaming.twitter._
 import java.time.LocalDateTime
 import scala.collection._
 
-case class TweetData(company: String, date: String, sentiment: String)
+case class TweetData(company: String, date: String, sentiment: Int)
 
 class Streaming
 {

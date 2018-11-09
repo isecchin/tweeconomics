@@ -5,9 +5,9 @@ import scala.collection.mutable.HashMap
 object DB
 {
     val properties = new java.util.Properties
-    val url = null
+    var url = null
 
-    def configure(credentials: HashMap) = {
+    def configure(credentials: HashMap[String, String]) = {
         val dbPropertyKeys = Seq("dbUrl", "dbUser", "dbPassword")
 
         dbPropertyKeys.foreach(key => {
