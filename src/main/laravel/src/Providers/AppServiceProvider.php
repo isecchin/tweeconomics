@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Tweeconomics\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

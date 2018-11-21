@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Tweeconomics\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Tweeconomics\Controllers\BaseController;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
-class ForgotPasswordController extends Controller
+class ForgotPasswordController extends BaseController
 {
     /*
     |--------------------------------------------------------------------------
