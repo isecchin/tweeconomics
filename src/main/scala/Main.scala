@@ -16,9 +16,13 @@ object App
     import sqlContext.implicits._
 
     def main(args: Array[String]) = {
-        val streaming = new Streaming()
+        try {
+            val streaming = new Streaming()
 
-        streaming.setupAnalyzer()
-        streaming.start()
+            streaming.setupAnalyzer()
+            streaming.start()
+        } catch {
+            case e: Exception => e.printStackTrace
+        }
     }
 }
