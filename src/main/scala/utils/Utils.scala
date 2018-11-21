@@ -5,6 +5,7 @@ import java.io.File
 import scala.io.Source
 import org.apache.spark.sql.SparkSession
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.Map
 import scala.collection.mutable.ArrayBuffer
 import java.time.format.DateTimeFormatter
 
@@ -40,43 +41,25 @@ object Utils
         spark.read.json(filename)
     }
 
-    /**
-     * I know this is not ideal (we're using collect)
-     * but I could not find another way of doing the merge
-     * of the filters' array inside the JSON file yet
-     *
-     * @return Array of all filters
-     */
-    def getFilters() = {
-        val json = readJSON(dictionaryFileName)
+    def getFiltersSeq() = {
+        val dictionary = spark.read.jdbc(DB.url, "company_dictionary", DB.properties)
         val filtersArray = ArrayBuffer[String]()
 
-        json.collect().foreach(row => {
-            filtersArray += row.getAs[String]("filter")
+        dictionary.collect().foreach(row => {
+            filtersArray += row.getAs[String]("word")
         })
 
-        filtersArray
+        filtersArray.toSeq
     }
 
-    /**
-     * I know this is not ideal (we're using collect)
-     * but I could not find another way of doing the merge
-     * of the filters' array inside the JSON file yet
-     *
-     * @return Array of all filters
-     */
     def getFiltersMap() = {
-        val json = readJSON(dictionaryFileName)
-        val filtersArray = ArrayBuffer[Map[String, String]]()
+        val dictionary = spark.read.jdbc(DB.url, "company_dictionary", DB.properties)
+        var filters = Map[String, Long]()
 
-        json.collect().foreach(row => {
-            val company = row.getAs[String]("company")
-            val filter  = row.getAs[String]("filter")
-            val map = Map("company" -> company, "filter" -> filter)
-
-            filtersArray += map
+        dictionary.collect().foreach(row => {
+            filters += (row.getAs[String]("word") -> row.getAs[Long]("company_id"))
         })
 
-        filtersArray
+        filters
     }
 }
