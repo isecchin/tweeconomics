@@ -14,14 +14,14 @@ class Streaming
 {
     Utils.setupCredentials()
 
-    val filtersSeq = Utils.getFiltersSeq()
-    val filtersMap = Utils.getFiltersMap()
-
     val ssc = new StreamingContext(App.sc, Seconds(60))
-    val stream = TwitterUtils.createStream(ssc, None, filtersSeq)
+    val stream = TwitterUtils.createStream(ssc, None, Utils.getFiltersSeq())
     import App.sqlContext.implicits._
 
     def setupAnalyzer() = {
+        val filtersSeq = Utils.getFiltersSeq()
+        val filtersMap = Utils.getFiltersMap()
+
         val tweets = stream
             .filter{status => status.getLang == "en" && filtersSeq.exists(status.getText().contains)}
             .map(status => {
