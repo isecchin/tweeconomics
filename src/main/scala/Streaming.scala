@@ -37,7 +37,10 @@ class Streaming
             })
 
         tweets.foreachRDD{rdd =>
+            val now = LocalDateTime.now()
+            val count = rdd.count()
             println(s"Number of tweets in block of time $now: $count")
+
             rdd.toDF().write.mode("append").jdbc(DB.url, "analyzed_tweets", DB.properties)
         }
     }
