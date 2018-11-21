@@ -8,20 +8,20 @@ import org.apache.spark.streaming.twitter._
 import java.time.LocalDateTime
 import scala.collection._
 
-case class TweetData(company_id: Long, sentiment_id: Int, date: String)
+case class TweetData(company_id: Long, sentiment_id: Int, posted_at: String)
 
 class Streaming
 {
     Utils.setupCredentials()
 
-    val filtersSeq = Utils.getFiltersSeq()
-    val filtersMap = Utils.getFiltersMap()
-
     val ssc = new StreamingContext(App.sc, Seconds(60))
-    val stream = TwitterUtils.createStream(ssc, None, filtersSeq)
+    val stream = TwitterUtils.createStream(ssc, None, Utils.getFiltersSeq())
     import App.sqlContext.implicits._
 
     def setupAnalyzer() = {
+        val filtersSeq = Utils.getFiltersSeq()
+        val filtersMap = Utils.getFiltersMap()
+
         val tweets = stream
             .filter{status => status.getLang == "en" && filtersSeq.exists(status.getText().contains)}
             .map(status => {
@@ -37,7 +37,10 @@ class Streaming
             })
 
         tweets.foreachRDD{rdd =>
+            val now = LocalDateTime.now()
+            val count = rdd.count()
             println(s"Number of tweets in block of time $now: $count")
+
             rdd.toDF().write.mode("append").jdbc(DB.url, "analyzed_tweets", DB.properties)
         }
     }
