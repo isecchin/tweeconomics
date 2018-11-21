@@ -6,7 +6,7 @@ libraryDependencies += "org.apache.spark" % "spark-core_2.11"              % "2.
 libraryDependencies += "org.apache.spark" % "spark-streaming_2.11"         % "2.1.1"
 libraryDependencies += "org.apache.spark" % "spark-sql_2.11"               % "2.1.1"
 libraryDependencies += "org.apache.bahir" % "spark-streaming-twitter_2.11" % "2.1.0"
-libraryDependencies += "org.joda"         % "joda-convert"                 % "1.8.1"
+libraryDependencies += "mysql"            % "mysql-connector-java"         % "8.0.13"
 
 libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp"             % "3.7.0" artifacts (Artifact("stanford-corenlp", "models"), Artifact("stanford-corenlp"))
 

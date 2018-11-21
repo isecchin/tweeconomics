@@ -1,28 +1,44 @@
 package tweeconomics
 
+import tweeconomics.utils._
 import org.apache.spark._
 import org.apache.spark.streaming._
-import org.apache.spark.streaming.dstream._
+import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.twitter._
+import java.time.LocalDateTime
+import scala.collection._
 
-class Streaming {
+case class TweetData(company_id: Long, sentiment_id: Int, date: String)
 
 class Streaming
 {
-    Utils.configureTwitterCredentials()
+    Utils.setupCredentials()
 
-    val ssc = new StreamingContext(App.sc, Seconds(1))
-    val stream = TwitterUtils.createStream(ssc, None)
+    val filtersSeq = Utils.getFiltersSeq()
+    val filtersMap = Utils.getFiltersMap()
+
+    val ssc = new StreamingContext(App.sc, Seconds(60))
+    val stream = TwitterUtils.createStream(ssc, None, filtersSeq)
+    import App.sqlContext.implicits._
 
     def setupAnalyzer() = {
-        val tweets = stream.filter{status => status.getLang == "en"}.map{status =>
-            status.getText
-        }
+        val tweets = stream
+            .filter{status => status.getLang == "en" && filtersSeq.exists(status.getText().contains)}
+            .map(status => {
+                val text = status.getText()
+                val companyId = filtersMap(filtersSeq.filter(text.contains).head)
+                val sentiment = SentimentAnalyzer.extractSentiments(text).head
+                val postedAt = LocalDateTime.parse(
+                  status.getCreatedAt().toString(),
+                  Utils.twitterDateFormatter
+                ).format(Utils.dbDateFormatter)
 
-        tweets.countByValue().foreachRDD{rdd =>
-            rdd.foreach(tweet => {
-                SentimentAnalyzer.extractSentiments(tweet._1).foreach(println)
+                TweetData(companyId, sentiment._2, postedAt)
             })
+
+        tweets.foreachRDD{rdd =>
+            println(s"Number of tweets in block of time $now: $count")
+            rdd.toDF().write.mode("append").jdbc(DB.url, "analyzed_tweets", DB.properties)
         }
     }
 
