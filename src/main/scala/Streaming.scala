@@ -14,40 +14,31 @@ class Streaming
 {
     Utils.setupCredentials()
 
+    val filtersSeq = Utils.getFiltersSeq()
+    val filtersMap = Utils.getFiltersMap()
+
     val ssc = new StreamingContext(App.sc, Seconds(60))
-    val stream = TwitterUtils.createStream(ssc, None, Utils.getFilters())
+    val stream = TwitterUtils.createStream(ssc, None, filtersSeq)
     import App.sqlContext.implicits._
 
     def setupAnalyzer() = {
-        val filters = Utils.getFiltersMap()
         val tweets = stream
-            .filter{status => status.getLang == "en"}
-            .map(status => status.getText)
+            .filter{status => status.getLang == "en" && filtersSeq.exists(status.getText().contains)}
+            .map(status => {
+                val text = status.getText()
+                val companyId = filtersMap(filtersSeq.filter(text.contains).head)
+                val sentiment = SentimentAnalyzer.extractSentiments(text).head
+                val postedAt = LocalDateTime.parse(
+                  status.getCreatedAt().toString(),
+                  Utils.twitterDateFormatter
+                ).format(Utils.dbDateFormatter)
 
-        tweets.foreachRDD{rdd =>
-            val now = LocalDateTime.now()
-            val dateString = now.format(Utils.dateFormatter)
-            val count = rdd.count()
-            println(s"Number of tweets in block of time $now: $count")
-
-            val dataList = mutable.MutableList[TweetData]()
-
-            rdd.collect().foreach(tweet => {
-                val sentiments = SentimentAnalyzer.extractSentiments(tweet)
-
-                sentiments.foreach(sentiment => {
-                    filters.foreach(filter => {
-                        if (filter("filter").isSubstringOf(tweet)) {
-                            val company = filter("company")
-                            val sentimentString = sentiment._2
-                            val tweetData = TweetData(company, dateString, sentimentString)
-                            dataList += tweetData
-                        }
-                    })
-                })
+                TweetData(companyId, sentiment._2, postedAt)
             })
 
-            dataList.toDF().write.format("parquet").mode("append").save("hdfs://localhost:9000/user/hdfs/tweeconomics/data")
+        tweets.foreachRDD{rdd =>
+            println(s"Number of tweets in block of time $now: $count")
+            rdd.toDF().write.mode("append").jdbc(DB.url, "analyzed_tweets", DB.properties)
         }
     }
 
