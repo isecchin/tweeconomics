@@ -23,7 +23,7 @@ object SentimentAnalyzer
 
     private def extractSentiment(text: String): Int = {
         val (_, sentiment) = extractSentiments(text)
-            .maxBy { case (sentence, _) => sentence.length }
+            .maxBy{case (sentence, _) => sentence.length}
         sentiment
     }
 
