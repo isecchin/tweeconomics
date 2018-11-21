@@ -13,6 +13,7 @@ object SentimentAnalyzer
 {
     val props = new Properties()
     props.setProperty("annotators", "tokenize, ssplit, parse, sentiment")
+    props.setProperty("tokenize.options", "untokenizable=noneKeep")
     val pipeline: StanfordCoreNLP = new StanfordCoreNLP(props)
 
     def mainSentiment(input: String): Int = Option(input) match {
