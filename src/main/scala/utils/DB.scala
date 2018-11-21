@@ -1,12 +1,12 @@
 package tweeconomics
 
+import java.util.Properties
 import scala.collection.mutable.HashMap
 
 object DB
 {
-    val properties = new java.util.Properties
-    def url: String = ""
-    def url_=(s: String): Unit = {}
+    val properties = new Properties
+    var url: String = ""
 
     def configure(credentials: HashMap[String, String]) = {
         val dbPropertyKeys = Seq("dbUrl", "dbUser", "dbPassword")
