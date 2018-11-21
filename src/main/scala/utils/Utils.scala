@@ -14,7 +14,8 @@ object Utils
     val dictionaryFileName = "dictionary.json"
     val spark = SparkSession.builder().getOrCreate()
 
-    val dateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss.SSS")
+    val dbDateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss.SSS")
+    val twitterDateFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy")
 
     def setupCredentials() = {
         val file = new File("credentials.txt")
