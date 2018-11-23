@@ -11,5 +11,16 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css');
+mix.js('resources/js/core.js', 'public/js/main.js')
+    .combine([
+        'public/js/main.js',
+        'resources/js/plugins/*.js',
+        'resources/js/models/*.js',
+        'resources/js/utils.js',
+        'resources/js/main.js'
+    ], 'public/js/main.js')
+   .sass('resources/sass/core.scss', 'public/css/main.css')
+       .combine([
+        'public/css/main.css',
+        'resources/sass/dashboard.css'
+    ], 'public/css/main.css');
