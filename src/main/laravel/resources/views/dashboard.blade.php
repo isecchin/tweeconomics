@@ -83,5 +83,27 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="card" style="width: 100%;margin: 10px;">
+                <div class="card-header d-flex p-0 ui-sortable-handle">
+                    <h3 class="card-title p-3">
+                        <i class="fas fa-chart-line mr-1"></i>
+                        {{ trans('dashboard.stocks_chart_title', ['nasdaq' => $company->nasdaq]) }}
+                    </h3>
+                </div>
+
+                <div class="card-body">
+                    <div id="stocks-chart-div">
+                        <i class="fas fa-spinner fa-spin fa-5x chart-loading"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+@stop
+
+@section('js')
+    <script>
+        var stocks = new Stocks('{{ config('stocks.api_key') }}');
+    </script>
 @stop

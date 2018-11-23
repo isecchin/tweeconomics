@@ -2,6 +2,7 @@ var Dashboard = $.extend(Dashboard || {}, {
 
     selectors: {
         chart        : '#chart-div',
+        stocksChart  : '#stocks-chart-div',
         chartLoading : '.chart-loading',
         totals       : '.totals',
         initialDate  : '.data-since-value',
@@ -89,18 +90,97 @@ var Dashboard = $.extend(Dashboard || {}, {
 
     renderDailyData: function() {
         this.renderData('/ajax/get_daily_data');
+        this.renderStocksDaily();
     },
 
     renderWeeklyData: function() {
         this.renderData('/ajax/get_weekly_data');
+        this.renderStocksWeekly();
     },
 
     renderMonthlyData: function() {
         this.renderData('/ajax/get_monthly_data');
+        this.renderStocksMonthly();
     },
 
     renderYearlyData: function() {
         this.renderData('/ajax/get_yearly_data');
+        this.renderStocksYearly();
+    },
+
+    renderStocksDaily: function() {
+        var self = this;
+
+        $(self.selectors.stocksChart).html(self.templates.chartLoading);
+
+        var options = {
+            symbol: $(this.selectors.companyInput).data('nasdaq'),
+            interval: '5min',
+            amount: 100
+        };
+
+        async function f() {
+            Dashboard.stocksData = await stocks.timeSeries(options);
+        };
+
+        f().then(self.loadStocksChart);
+    },
+
+    renderStocksWeekly: function() {
+        var self = this;
+
+        $(self.selectors.stocksChart).html(self.templates.chartLoading);
+
+        var options = {
+            symbol: $(this.selectors.companyInput).data('nasdaq'),
+            interval: '5min',
+            start: moment().subtract(1, 'week').toDate(),
+            end: moment().toDate()
+        };
+
+        async function f() {
+            Dashboard.stocksData = await stocks.timeSeries(options);
+        };
+
+        f().then(self.loadStocksChart);
+    },
+
+    renderStocksMonthly: function() {
+        var self = this;
+
+        $(self.selectors.stocksChart).html(self.templates.chartLoading);
+
+        var options = {
+            symbol: $(this.selectors.companyInput).data('nasdaq'),
+            interval: 'daily',
+            start: moment().subtract(1, 'month').toDate(),
+            end: moment().toDate()
+        };
+
+        async function f() {
+            Dashboard.stocksData = await stocks.timeSeries(options);
+        };
+
+        f().then(self.loadStocksChart);
+    },
+
+    renderStocksYearly: function() {
+        var self = this;
+
+        $(self.selectors.stocksChart).html(self.templates.chartLoading);
+
+        var options = {
+            symbol: $(this.selectors.companyInput).data('nasdaq'),
+            interval: 'daily',
+            start: moment().subtract(1, 'year').toDate(),
+            end: moment().toDate()
+        };
+
+        async function f() {
+            Dashboard.stocksData = await stocks.timeSeries(options);
+        };
+
+        f().then(self.loadStocksChart);
     },
 
     renderData: function(url) {
@@ -153,6 +233,31 @@ var Dashboard = $.extend(Dashboard || {}, {
         };
 
         var chart = new google.charts.Line(document.getElementById('chart-div'));
+        chart.draw(data, options);
+    },
+
+    loadStocksChart: function() {
+        google.charts.setOnLoadCallback(Dashboard.drawStocksChart);
+    },
+
+    drawStocksChart: function(stocksData) {
+        var data = new google.visualization.DataTable();
+
+        data.addColumn('datetime', Lang.get('dashboard.time'));
+        data.addColumn('number',   Lang.get('dashboard.stocks_price'));
+
+        $.each(Dashboard.stocksData, function(key, row) {
+            data.addRow([
+                new Date(row.date),
+                row.low
+            ]);
+        });
+
+        var options = {
+            colors: ['#dc3545']
+        };
+
+        var chart = new google.charts.Line(document.getElementById('stocks-chart-div'));
         chart.draw(data, options);
     },
 
