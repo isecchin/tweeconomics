@@ -8,7 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
 
 use Tweeconomics\Exceptions\MisconfiguredViewsException;
-use Tweeconomics\Models\Neighborhood;
+use Tweeconomics\Models\Company;
 
 /**
  * Base Controller class to be extended further
@@ -90,7 +90,7 @@ abstract class BaseController extends Controller
         $additionalData = array_merge(
             $additionalData,
             [
-                'neighborhoods' => Neighborhood::orderBy('Label')->get()
+                'companies' => Company::orderBy('name')->get()
             ]
         );
 
