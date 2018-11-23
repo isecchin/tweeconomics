@@ -14,7 +14,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'Tweeconomics\Http\Controllers';
+    protected $namespace = 'Tweeconomics\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
