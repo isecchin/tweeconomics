@@ -1,0 +1,50 @@
+.dashboard-sensor-display .small-box {
+    height: 150px;
+}
+.dashboard-sensor-display .icon {
+    padding: 15px;
+}
+.sensor-data {
+    display: inline-flex;
+    padding: 5px;
+}
+.sensor-data .unit {
+    padding: 15px;
+    font-size: 25px;
+}
+h3.sensor-value {
+    font-size: 75px;
+    font-weight: 500;
+    height: 90px;
+}
+.data-since {
+    color: #6c757d;
+}
+.data-since-value {
+    padding-left: 5px;
+}
+@media (max-width: 768px) {
+    .navbar .input-group {
+        width: 245px;
+    }
+    .sensor-data {
+        display: block;
+    }
+    h3.sensor-value {
+        font-size: 50px;
+        height: 50px;
+    }
+    .sensor-data .unit {
+        padding: 0;
+        font-size: 25px;
+    }
+    .dashboard-sensor-display .icon {
+        display: unset;
+        width: 100%;
+        text-align: center;
+        top: -5px;
+        right: 0;
+        padding: 10px;
+        color: rgba(0, 0, 0, 0.05);
+    }
+}

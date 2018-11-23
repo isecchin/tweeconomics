@@ -1,0 +1,61 @@
+
+// AdminLTE
+@import '~admin-lte/dist/css/adminlte.css';
+
+// Font Awesome
+@import "~@fortawesome/fontawesome-free/css/all.css";
+
+// Select2
+@import "~select2/dist/css/select2.css";
+
+// Google Fonts
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
+
+.content-wrapper {
+    height: 100%;
+}
+
+.home-text {
+    display: grid;
+}
+.home-text span {
+    padding-left: 15px;
+    padding-bottom: 6px;
+}
+.navbar .input-group {
+    display: flex;
+    flex-flow: row;
+    width: 250px;
+}
+.navbar .select2-container--default .select2-selection--single {
+    background-color: #f2f4f6;
+    border: 1px solid #f2f4f6;
+    border-radius: unset;
+    height: inherit;
+}
+.navbar .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    margin-top: 2px;
+}
+.select2-dropdown.select2-dropdown--below {
+    background: #d6d7d8;
+    border: none;
+}
+.neighborhood-picker {
+    width: 250px;
+}
+
+#chart-div {
+    display: block;
+    height: 350px;
+}
+
+#stocks-chart-div {
+    display: block;
+    height: 350px;
+}
+
+.chart-loading {
+    position: absolute;
+    top: 40%;
+    left: 45%;
+}
