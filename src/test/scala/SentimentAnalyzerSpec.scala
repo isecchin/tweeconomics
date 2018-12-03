@@ -1,6 +1,11 @@
+package tweeconomics
+
+import org.apache.log4j._
 import org.scalatest.{FunSpec, Matchers}
 
 class SentimentAnalyzerSpec extends FunSpec with Matchers {
+
+    BasicConfigurator.configure()
 
     describe("sentiment analyzer") {
         it("should return POSITIVE when input has positive emotion") {
